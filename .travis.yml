@@ -21,7 +21,6 @@ after_success:
 
 addons:
   artifacts:
-    paths:
-      - $(ls churchconnect_rest-api-*.war)
-    target_paths:
-      - "unstable/"
+    paths: $(ls churchconnect_rest-api-*.war)
+    target_paths: "unstable/"
+    permissions: "public_read"
