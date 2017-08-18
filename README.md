@@ -38,6 +38,7 @@ environments:
 We deploy the API to an AWS Elastic Beanstalk environment, configured as follows:
 
 * Tomcat application
+* build your own war file or download one from the build page. See the section below on getting a WAR file.
 * choose a `t2.micro` instance type
 * In software configuration:
     * Max JVM Heap: 768m 
@@ -49,10 +50,14 @@ We deploy the API to an AWS Elastic Beanstalk environment, configured as follows
     * church.contentful.write.apiURL
 * You can verify that the API is running by going to `/metadata` on the application.
 
-Once you have a Beanstalk, you will need to generate and upload a war file.
+## Getting a WAR file
+
+Successful builds of this open source project are uploaded to [this s3 bucket](http://churchconnect-builds.s3.amazonaws.com). Stable releases are listed under the `releases` directory. Other builds triggered on every push are listed under `unstable`. If you are planning to deploy the application, simply choose the latest release. The releases feature a date-based version number, so you can determine the latest version by finding the most recent dated version of release. If you are testing out a pull request that you've submitted to us, match the commit hash of your pull request with the filename of the unstable build to find the war file that matches your build.
+
+If you would like to build your own war file, follow these instructions:
+
 * `grails war` will instruct grails to build the application into a war file.
 * the resulting artifact is stored in `build/libs/`.
 * We recommend putting at least the date in each war file name to distinguish builds.
 * upload and deploy the renamed file as a new application version in beanstalk.
 
-Successful builds of this open source project will be dropped into a public S3 bucket.
