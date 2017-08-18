@@ -18,7 +18,6 @@ after_success:
   - commit_hash=`git rev-parse --short HEAD`
   - label="`date +%Y%m%d%H%M-$commit_hash`"
   - mv build/libs/rest-api-*.war churchconnect_rest-api-$label.war
-  - ls churchconnect_rest-api-*.war
 
 addons:
   artifacts:
