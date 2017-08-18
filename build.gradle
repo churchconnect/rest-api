@@ -20,7 +20,7 @@ buildscript {
     }
 }
 
-version "0.1"
+version "2017.08.18"
 group "co.sharptop.church"
 
 apply plugin:"eclipse"
