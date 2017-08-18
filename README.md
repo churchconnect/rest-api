@@ -5,7 +5,6 @@
 * Software requirements (most easily installed using [SDKMAN](http://sdkman.io/)):
     * JAVA 8
     * Grails (see `gradle.properties` for the version to install).
-* Clone the API. [Repo link](https://bitbucket.org/sharptop/church-connect-api). 
 * customize the Contentful configuration in `application.yml`:
     * the `spaceID` can be found by looking at the url when logged into contentful and working in your space.
     * the read apiURL will have the format: `https://cdn.contentful.com/spaces/{spaceID}`
@@ -48,11 +47,14 @@ We deploy the API to an AWS Elastic Beanstalk environment, configured as follows
     * church.contentful.read.apiURL
     * church.contentful.write.apiKey
     * church.contentful.write.apiURL
+    * grails.mail.username
+    * grails.mail.password
+    * grails.mail.default.from (if you are using SES, make sure to verify the FROM address...)
 * You can verify that the API is running by going to `/metadata` on the application.
 
 ## Getting a WAR file
 
-Successful builds of this open source project are uploaded to [this s3 bucket](http://churchconnect-builds.s3.amazonaws.com). Stable releases are listed under the `releases` directory. Other builds triggered on every push are listed under `unstable`. If you are planning to deploy the application, simply choose the latest release. The releases feature a date-based version number, so you can determine the latest version by finding the most recent dated version of release. If you are testing out a pull request that you've submitted to us, match the commit hash of your pull request with the filename of the unstable build to find the war file that matches your build.
+Successful builds of this open source project are uploaded to [this s3 bucket](http://churchconnect-builds.s3.amazonaws.com/index.html). Stable releases are listed under the `releases` directory. Other builds triggered on every push are listed under `unstable`. If you are planning to deploy the application, simply choose the latest release. The releases feature a date-based version number, so you can determine the latest version by finding the most recent dated version of release. If you are testing out a pull request that you've submitted to us, match the commit hash of your pull request with the filename of the unstable build to find the war file that matches your build.
 
 If you would like to build your own war file, follow these instructions:
 
