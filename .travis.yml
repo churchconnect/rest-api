@@ -25,4 +25,3 @@ addons:
     paths: $(ls churchconnect_rest-api-*.war)
     target_paths: unstable/
     permissions: public-read
-    debug: true
