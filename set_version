@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+    version="`date +%Y.%m.%d`"
+else
+    version="$1"
+fi
+
+sed -i.bak -e "s/version \"[^\"]*\"/version \"$version\"/" build.gradle

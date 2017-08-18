@@ -20,48 +20,7 @@ buildscript {
     }
 }
 
-version "0.1"
-group "co.sharptop.church"
-
-apply plugin:"eclipse"
-apply plugin:"idea"
-apply plugin:"war"
-apply plugin:"org.grails.grails-web"
-apply plugin:"org.grails.plugins.views-json"
-
-ext {
-    grailsVersion = project.grailsVersion
-    gradleWrapperVersion = project.gradleWrapperVersion
-}
-
-repositories {
-    mavenLocal()
-    maven { url "https://repo.grails.org/grails/core" }
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.grails:grails-bom:$grailsVersion"
-    }
-    applyMavenExclusions false
-}
-
-buildscript {
-    ext {
-        grailsVersion = project.grailsVersion
-    }
-    repositories {
-        mavenLocal()
-        maven { url "https://repo.grails.org/grails/core" }
-    }
-    dependencies {
-        classpath "org.grails:grails-gradle-plugin:$grailsVersion"
-        classpath "org.grails.plugins:hibernate4:5.0.10"
-        classpath "org.grails.plugins:views-gradle:1.0.12"
-    }
-}
-
-version "0.1"
+version "2017.08.18"
 group "co.sharptop.church"
 
 apply plugin:"eclipse"
