@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2016 by SharpTop Software, LLC
+ * All rights reserved. No part of this software project may be used, reproduced, distributed, or transmitted in any
+ * form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior
+ * written permission of SharpTop Software, LLC. For permission requests, write to the author at info@sharptop.co.
+ */
+
+import org.springframework.validation.*
+
+/**
+ * Renders validation errors according to vnd.error: https://github.com/blongden/vnd.error
+ */
+model {
+    Errors errors
+}
+
+response.status UNPROCESSABLE_ENTITY
+
+json {
+    Errors errorsObject = (Errors)this.errors
+    def allErrors = errorsObject.allErrors
+    int errorCount = allErrors.size()
+    def resourcePath = g.link(resource:request.uri, absolute:false)
+    def resourceLink = g.link(resource:request.uri, absolute:true)
+    if(errorCount == 1) {
+        def error = allErrors.iterator().next()
+        message messageSource.getMessage(error, locale)
+        path resourcePath
+        _links {
+            self {
+                href resourceLink
+            }
+        }
+    }
+    else {
+        total errorCount
+        _embedded {
+            errors(allErrors) { ObjectError error ->
+                message messageSource.getMessage(error, locale)
+                path resourcePath
+                _links {
+                    self {
+                        href resourceLink
+                    }
+                }
+            }
+        }
+    }
+}

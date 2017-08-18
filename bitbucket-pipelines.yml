@@ -1,0 +1,10 @@
+image:
+  name: rheathcote/churchconnect-api-base:latest
+
+pipelines:
+  default:
+    - step:
+        script:
+          - $GRAILS test-app
+          - $GRAILS war
+          - $SCRIPTS_DIR/s3-upload.sh

@@ -1,0 +1,161 @@
+---
+hibernate:
+    cache:
+        queries: false
+        use_second_level_cache: true
+        use_query_cache: false
+        region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
+
+dataSource:
+    pooled: true
+    jmxExport: true
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+
+environments:
+    development:
+        grails.mail.disabled: true
+        dataSource:
+            dbCreate: update
+            url: jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+        church:
+            contentful:
+                read:
+                    apiURL: https://cdn.contentful.com/spaces/xxxxxxxxxxxx
+                    apiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                write:
+                    apiURL: https://api.contentful.com/spaces/xxxxxxxxxxxx
+                    # this key is an OAuth key for using the Content Management API
+                    # obtain the key here: https://www.contentful.com/developers/docs/references/authentication/#the-management-api
+                    # we may need to store the church's username and password, rather than the token.
+                    apiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+    test:
+        grails.mail.disabled: true
+        dataSource:
+            dbCreate: update
+            url: jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+        church:
+            contentful:
+                read:
+                    apiURL: https://cdn.contentful.com/spaces/xxxxxxxxxxxx
+                    apiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                write:
+                    apiURL: https://api.contentful.com/spaces/xxxxxxxxxxxx
+                    # this key is an OAuth key for using the Content Management API with Sharptop's Contentful acccount.
+                    # we will need a service account and OAuth key for each church.
+                    # obtain the key here: https://www.contentful.com/developers/docs/references/authentication/#the-management-api
+                    # we may need to store the church's username and password, rather than the token.
+                    apiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+    production:
+        grails.mail.disabled: false
+        dataSource:
+            dbCreate: update
+            url: jdbc:h2:mem:prodDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+            properties:
+                jmxEnabled: true
+                initialSize: 5
+                maxActive: 50
+                minIdle: 5
+                maxIdle: 25
+                maxWait: 10000
+                maxAge: 600000
+                timeBetweenEvictionRunsMillis: 5000
+                minEvictableIdleTimeMillis: 60000
+                validationQuery: SELECT 1
+                validationQueryTimeout: 3
+                validationInterval: 15000
+                testOnBorrow: true
+                testWhileIdle: true
+                testOnReturn: false
+                jdbcInterceptors: ConnectionState
+                defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+
+---
+---
+grails:
+    profile: rest-api
+    codegen:
+        defaultPackage: co.sharptop.church
+    spring:
+        transactionManagement:
+            proxies: false
+info:
+    app:
+        name: '@info.app.name@'
+        version: '@info.app.version@'
+        grailsVersion: '@info.app.grailsVersion@'
+spring:
+    groovy:
+        template:
+            check-template-location: false
+# Spring Actuator Endpoints are Disabled by Default
+endpoints:
+    enabled: false
+    jmx:
+        enabled: true
+
+---
+grails:
+    web:
+        url:
+            converter: "hyphenated"
+    mime:
+        disable:
+            accept:
+                header:
+                    userAgents:
+                        - Gecko
+                        - WebKit
+                        - Presto
+                        - Trident
+        types:
+            all: '*/*'
+            atom: application/atom+xml
+            css: text/css
+            csv: text/csv
+            form: application/x-www-form-urlencoded
+            html:
+              - text/html
+              - application/xhtml+xml
+            js: text/javascript
+            json:
+              - application/json
+              - text/json
+            multipartForm: multipart/form-data
+            rss: application/rss+xml
+            text: text/plain
+            hal:
+              - application/hal+json
+              - application/hal+xml
+            xml:
+              - text/xml
+              - application/xml
+    urlmapping:
+        cache:
+            maxsize: 1000
+    controllers:
+        defaultScope: singleton
+    converters:
+        encoding: UTF-8
+    mail:
+        host: "email-smtp.us-east-1.amazonaws.com"
+        port: 465
+        # these are not normal user access keys -- to create a username and password,
+        # go into the SMTP Settings of SES and create the credentials from there.
+        # https://console.aws.amazon.com/iam/home?#s=SESHome
+        username: xxxxxxxxxxxxxxxxxxxx
+        password: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        props:
+            mail:
+                smtp:
+                    auth: true
+                    socketFactory:
+                        port: 465
+                        class: javax.net.ssl.SSLSocketFactory
+                        fallback: false
+# TODO: we need to verify this from address in SES.
+#        default.from: '"Church Connect" <noreply@churchconnectapp.org>'
+        default.from: '"Church Connect" <noreply@sharptopsoftware.com>'
