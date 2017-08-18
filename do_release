@@ -1,0 +1,12 @@
+#!/bin/bash
+
+git checkout master
+./set_version
+git commit -m "release version `./get_version`"
+git push origin master
+git tag `./get_version`
+git push origin --tags
+git checkout release
+git merge master
+git push origin release
+git checkout master

@@ -17,10 +17,10 @@ script:
 after_success:
   - label=$(./get_version)
   - mv build/libs/rest-api-*.war churchconnect_rest-api-$label.war
+  - ls churchconnect_rest-api-*.war
 
 addons:
   artifacts:
-    paths:
-      - $(ls churchconnect_rest-api-*.war)
-    target_paths:
-      - "releases/"
+    paths: $(ls churchconnect_rest-api-*.war)
+    target_paths: releases
+    permissions: public-read
