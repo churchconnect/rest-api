@@ -23,3 +23,5 @@ addons:
   artifacts:
     paths:
       - $(ls churchconnect_rest-api-*.war)
+    target_paths:
+      - "/"

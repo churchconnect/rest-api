@@ -1,4 +1,4 @@
-# ChurchConnect API
+# ChurchConnect API [![Build Status](https://travis-ci.org/churchconnect/rest-api.svg?branch=master)](https://travis-ci.org/churchconnect/rest-api)
 
 ## Development
 
