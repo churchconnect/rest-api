@@ -21,10 +21,19 @@ import spock.lang.Specification
 @TestMixin(GrailsUnitTestMixin)
 class FeedServiceSpec extends Specification {
 
+    EventService mockEventService
+
     def setup() {
         Entry.initializeData()
         Config.initializeData()
-        service.contentfulService = new ContentfulService(readApiURL: "https://cdn.contentful.com/spaces/og0cae44jgie", readApiKey: "7a90026a74e435c32abf99cd6f7f7676449de92fc0c44051bf86fd326e7fe60d")
+        service.contentfulService = new ContentfulService(
+                readApiURL: "https://cdn.contentful.com/spaces/akvvi5g4kspm",
+                readApiKey: "ed0a251f9ea4bc1a3472bfa0ca89e51c3d7fa71dbd92813695fb8c5791f94fd7"
+        )
+
+        mockEventService = Mock()
+        service.eventService = mockEventService
+
     }
 
     def cleanup() {
@@ -41,7 +50,11 @@ class FeedServiceSpec extends Specification {
         result.postGroups
         !result.hasMinistryGroups
         result.hasPrayerRequests
-        result.sermon
+        !result.sermon
         result.songs
+
+        and:
+        1 * mockEventService.getAllEvents() >> [ new Event() ]
+        0 * _
     }
 }
