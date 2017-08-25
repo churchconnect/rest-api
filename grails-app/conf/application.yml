@@ -30,6 +30,7 @@ environments:
                     # obtain the key here: https://www.contentful.com/developers/docs/references/authentication/#the-management-api
                     # we may need to store the church's username and password, rather than the token.
                     apiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        eventsICalFile: https://api.serviceu.com/rest/events/occurrences?orgKey=9c6e78a4-5516-4203-9729-6ed0a665b2ae&format=ical
 
     test:
         grails.mail.disabled: true
@@ -48,6 +49,7 @@ environments:
                     # obtain the key here: https://www.contentful.com/developers/docs/references/authentication/#the-management-api
                     # we may need to store the church's username and password, rather than the token.
                     apiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        eventsICalFile: https://api.serviceu.com/rest/events/occurrences?orgKey=9c6e78a4-5516-4203-9729-6ed0a665b2ae&format=ical
 
     production:
         grails.mail.disabled: false

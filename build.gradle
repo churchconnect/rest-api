@@ -82,4 +82,7 @@ dependencies {
     compile "org.grails.plugins:spring-security-rest-gorm:${springSecurityRestVersion}"
     compile 'org.grails:grails-datastore-rest-client:5.0.0.RC2'
     compile "org.grails.plugins:mail:2.0.0.RC6"
+    // https://mvnrepository.com/artifact/org.mnode.ical4j/ical4j
+    compile group: 'org.mnode.ical4j', name: 'ical4j', version: '1.0.3'
+
 }

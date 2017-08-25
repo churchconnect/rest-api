@@ -7,8 +7,6 @@
 
 package co.sharptop.church
 
-import java.text.SimpleDateFormat
-
 class PostGroup extends Entry {
 
     String title
@@ -16,6 +14,7 @@ class PostGroup extends Entry {
     List<Post> posts
     String rssUrl
     List<Post> publishedPosts
+    String rssMetadata
 
     static String contentfulContentType = "post-group"
 
@@ -29,31 +28,7 @@ class PostGroup extends Entry {
         }
     }
 
-    List<Post> getRssPosts() {
-        (rssUrl) ? createRssPosts(rssUrl) : []
-    }
-
-    List<Post> createRssPosts(String rssUrl) {
-        def rootRss = new XmlSlurper().parse(rssUrl)
-
-        rootRss.channel.item.withIndex().collect { item, index ->
-            /**
-             * MD5 Id generated with a Seed word that WONT change. Hence same MD5 on each request
-             */
-            new Post(
-                    id: HashUtil.generateMD5("rssPost-" + id + "-" + index),
-                    title: item.title,
-                    summary: "<img src='${item.content.thumbnail.@url}' />",
-                    date: new SimpleDateFormat("EEE, dd MMM yyyy kk:mm:ss Z").parse(item.pubDate.toString()),
-                    content: item.description,
-                    media: new Asset(
-                            title: item.content.title,
-                            url: item.content.thumbnail.@url,
-                            contentType: "image/webp",
-                            width: item.content.thumbnail.@width.toInteger(),
-                            height: item.content.thumbnail.@height.toInteger()
-                    )
-            )
-        }
+    private List<Post> getRssPosts() {
+        (rssMetadata) ? new RssUtil(rssMetadata, "rssPost-${id}").createRssPosts() : []
     }
 }
