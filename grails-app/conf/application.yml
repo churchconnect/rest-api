@@ -15,6 +15,7 @@ dataSource:
 
 environments:
     development:
+        #Add these configurations to an application-development.yml file in the root of your project to override the configurations in development.
         grails.mail.disabled: true
         dataSource:
             dbCreate: update
