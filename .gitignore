@@ -13,3 +13,4 @@ classes/
 *.db
 out
 *.bak
+application-*.yml
