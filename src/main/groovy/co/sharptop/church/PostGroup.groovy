@@ -7,6 +7,8 @@
 
 package co.sharptop.church
 
+import grails.util.Holders
+
 class PostGroup extends Entry {
 
     String title
@@ -29,6 +31,7 @@ class PostGroup extends Entry {
     }
 
     private List<Post> getRssPosts() {
-        (rssMetadata) ? new RssUtil(rssMetadata, "rssPost-${id}").createRssPosts() : []
+        RssPostService rssPostService = Holders.grailsApplication.mainContext.getBean('rssPostService')
+        rssPostService.fetch(this)
     }
 }
