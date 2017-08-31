@@ -1,7 +1,5 @@
 package co.sharptop.church
 
-import grails.util.Holders
-import io.sharptop.library.annotations.LogTime
 import org.springframework.scheduling.annotation.Scheduled
 
 /**
