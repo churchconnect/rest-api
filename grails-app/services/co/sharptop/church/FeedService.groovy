@@ -1,16 +1,18 @@
 package co.sharptop.church
 
-import grails.plugins.rest.client.RestBuilder
-import grails.transaction.Transactional
+import grails.converters.JSON
 
-@Transactional
 class FeedService {
 
     ContentfulService contentfulService
 
     EventService eventService
 
-    RestBuilder rest = new RestBuilder()
+    JSON feedJSON
+
+    void refreshFeedCache() {
+        feedJSON = fetch() as JSON
+    }
 
     Feed fetch() {
 

@@ -6,8 +6,6 @@ import org.springframework.scheduling.annotation.Scheduled
 @Transactional
 class RssPostService {
 
-    boolean lazyInit = false
-
     ContentfulService contentfulService
     Map cache = [:]
 
@@ -23,7 +21,6 @@ class RssPostService {
         return cache[postGroup.id]
     }
 
-    @Scheduled(fixedDelay=600000l, initialDelay = 30000l)
     void refreshFeeds() {
         log.info "Refreshing RSS Feeds"
         contentfulService.fetchEntries(PostGroup).findAll {
