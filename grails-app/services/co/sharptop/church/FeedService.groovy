@@ -2,6 +2,9 @@ package co.sharptop.church
 
 import grails.converters.JSON
 
+import javax.transaction.Transactional
+
+@Transactional
 class FeedService {
 
     ContentfulService contentfulService
