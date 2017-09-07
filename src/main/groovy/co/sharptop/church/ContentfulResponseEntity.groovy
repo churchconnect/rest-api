@@ -11,7 +11,7 @@ class ContentfulResponseEntity {
     ContentfulIncludes includes
 
     ContentfulResponseEntity(JSONObject responseJSON) {
-        includes = new ContentfulIncludes(responseJSON.includes)
+        includes = new ContentfulIncludes(responseJSON.includes, responseJSON.items)
         entries = responseJSON.items.collect {
             new ContentfulEntry(it)
         }

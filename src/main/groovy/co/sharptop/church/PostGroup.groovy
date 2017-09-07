@@ -10,6 +10,7 @@ class PostGroup extends Entry {
     String rssUrl
     List<Post> publishedPosts
     String rssMetadata
+    List<PostGroup> postGroups
 
     static String contentfulContentType = "post-group"
 
