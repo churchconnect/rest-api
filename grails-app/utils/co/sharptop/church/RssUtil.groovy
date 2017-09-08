@@ -74,15 +74,12 @@ class RssUtil {
     }
 
     String concatMetadataValues(metadataAttributes, rssPost, seperator = "") {
-        metadataAttributes.collect { objectBinder(rssPost, it) }.join(seperator)
+        metadataAttributes.collect { objectBinder(rssPost, it.target) }.join(seperator)
     }
 
-    def objectBinder(obj, path) {
-        def json = new JSONObject(path)
-        def target = json.target
-
-        def out = Eval.x(obj, "x.${target}")
-
-        out
+    def objectBinder(doc, path) {
+        def nodes = doc
+        path.split("\\.").each { nodes = nodes."${it}" }
+        return nodes
     }
 }

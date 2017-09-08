@@ -1,7 +1,6 @@
 package co.sharptop.church
 
 import grails.transaction.Transactional
-import org.springframework.scheduling.annotation.Scheduled
 
 @Transactional
 class RssPostService {
@@ -28,6 +27,7 @@ class RssPostService {
         }.each { PostGroup postGroup ->
             refreshFeed(postGroup)
         }
+        log.info "Done refreshing RSS Feeds"
     }
 
     void refreshFeed(PostGroup postGroup) {
