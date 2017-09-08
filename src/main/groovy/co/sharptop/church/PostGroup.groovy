@@ -7,10 +7,12 @@ class PostGroup extends Entry {
     String title
     Asset media
     List<Post> posts
-    String rssUrl
     List<Post> publishedPosts
     String rssMetadata
     List<PostGroup> postGroups
+    String postGroupsSummary
+    String postGroupsContent
+    boolean showOnHomeFeed
 
     static String contentfulContentType = "post-group"
 
