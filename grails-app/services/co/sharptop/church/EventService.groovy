@@ -74,7 +74,8 @@ class EventService {
                 count++
             }
         } catch(ex) {
-            println("Error: Invalid ICal URL")
+            log.error "Error processing iCal feed ${eventsICalFileUrl}"
+            log.error ex.message
         }
 
         calEvents

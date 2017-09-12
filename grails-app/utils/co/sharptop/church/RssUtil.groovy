@@ -1,8 +1,10 @@
 package co.sharptop.church
 
+import groovy.util.logging.Slf4j
 import org.grails.web.json.JSONObject
 import java.text.SimpleDateFormat
 
+@Slf4j
 class RssUtil {
     String rssMetadata
     String rssPostIdBase
@@ -20,7 +22,12 @@ class RssUtil {
         def rssMetadataFields = rssJsonData.fields
 
         rootRss.channel.item.withIndex().collect { item, index ->
-            createRssPost(rssMetadataFields, item, index)
+            try {
+                createRssPost(rssMetadataFields, item, index)
+            } catch(Exception e) {
+                log.error "Exception while creating Post for RSS Post Group ${rssPostIdBase}:"
+                log.error "Message: $e.message"
+            }
         }
     }
 
