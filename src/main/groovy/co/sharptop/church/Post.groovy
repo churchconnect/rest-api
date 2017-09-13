@@ -12,6 +12,7 @@ class Post extends Entry {
     SharingInfo sharingInfo
     String externalUrl
     Boolean useIframe
+    List<Map> extraFields
 
     static String contentfulContentType = "post"
 

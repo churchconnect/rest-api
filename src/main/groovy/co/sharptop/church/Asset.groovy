@@ -8,8 +8,8 @@ class Asset extends Entry {
     String url
     String contentType
     //TODO: figure out how to separate image assets from non-image assets.
-    Integer width
-    Integer height
+    def width
+    def height
 
     static String contentfulContentType = "asset"
 

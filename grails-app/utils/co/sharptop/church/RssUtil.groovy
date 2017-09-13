@@ -1,5 +1,6 @@
 package co.sharptop.church
 
+import groovy.util.slurpersupport.GPathResult
 import org.grails.web.json.JSONObject
 import java.text.SimpleDateFormat
 
@@ -15,39 +16,86 @@ class RssUtil {
     }
 
     List<Post> createRssPosts() {
-        def rssUrl = rssJsonData.url
-        def rootRss = new XmlSlurper().parse(rssUrl)
-        def rssMetadataFields = rssJsonData.fields
+        def rootRss = getXmlResult(rssJsonData.url, rssJsonData.namespaces)
 
         rootRss.channel.item.withIndex().collect { item, index ->
-            createRssPost(rssMetadataFields, item, index)
+            createRssPost(rssJsonData.fields, item, index)
         }
     }
 
-    Post createRssPost(rssMetadataFields, item, index) {
-        def imageForSummaryPath = rssJsonData.imageForSummaryPath
+    GPathResult getXmlResult(url, namespaces) {
+        Map out = [:]
+
+        namespaces.each {
+            out[it.name] = it.url
+        }
+
+        new XmlSlurper(false, true).parse(url).declareNamespace(out)
+    }
+
+    Post createRssPost(rssMetadataFields, rssItem, index) {
+        // Top level JSON data
+        def imageForSummaryPath = rssJsonData.imageForSummaryPath       // TODO: Might get rid of this
         def seperator = rssJsonData.attributeSeperator
         def dateStringFormat = rssJsonData.dateFormat
-        def title = concatMetadataValues(rssMetadataFields.title.attributes, item, seperator)
-        def summary = concatMetadataValues(rssMetadataFields.summary.attributes, item, seperator)
-        def dateString = concatMetadataValues(rssMetadataFields.date.attributes, item, seperator)
-        def content = concatMetadataValues(rssMetadataFields.content.attributes, item, seperator)
+
+        // Json field level (titled fields in the json, see createRssPosts)
+        def title = concatMetadataValues(rssMetadataFields.title.attributes, rssItem, seperator)
+        def summary = concatMetadataValues(rssMetadataFields.summary.attributes, rssItem, seperator)
+        def dateString = concatMetadataValues(rssMetadataFields.date.attributes, rssItem, seperator)
+        def content = concatMetadataValues(rssMetadataFields.content.attributes, rssItem, seperator)
         def media = null
+        List<Map> extraFields = []
+
+        // extraFields handling, maybe move into separate function later
+        if(rssJsonData.extraFields) {
+
+//            println(rssItem.group.content[0].@url)
+
+            // For each extraFields
+            rssJsonData.extraFields.each { extraField ->
+                def tempMap = [:]
+
+                // Loop through each attached property and value on the extraField
+                extraField.each { prop, value ->
+
+                    // If the property name is attribute, we need to make a map
+                    if (prop == "attribute") {
+                        def targetValue = objectBinder(rssItem, value.target)
+                        def type = value.type
+
+                        value = ["targetValue": targetValue.toString(), "type": type.toString()]
+                    // Else make sure the value is a string
+                    } else {
+                        value = value.toString()
+                    }
+
+                    // Assign the value to the property on a new map
+                    tempMap[prop.toString()] = value
+                }
+
+                extraFields.add(tempMap)
+            }
+        }
 
         if(imageForSummaryPath) {
-            summary = generateImageString(objectBinder(item, imageForSummaryPath))
+            summary = generateImageString(objectBinder(rssItem, imageForSummaryPath))
         }
 
         if(rssMetadataFields.media) {
             def mediaAttrs = rssMetadataFields.media
 
             if(mediaAttrs) {
+                def mediaContentTypeValue = (mediaAttrs.contentType.value) ? mediaAttrs.contentType.value : concatMetadataValues(mediaAttrs.contentType.attributes, rssItem, seperator)
+                def mediaContentWidth = (mediaAttrs.width.value) ? mediaAttrs.width.value : concatMetadataValues(mediaAttrs.width.attributes, rssItem, seperator)
+                def mediaContentHeight = (mediaAttrs.height.value) ? mediaAttrs.height.value : concatMetadataValues(mediaAttrs.height.attributes, rssItem, seperator)
+
                 media = new Asset(
-                        title: concatMetadataValues(mediaAttrs.title.attributes, item, seperator),
-                        url: concatMetadataValues(mediaAttrs.url.attributes, item, seperator),
-                        contentType: getMediaContentType(),
-                        width: concatMetadataValues(mediaAttrs.width.attributes, item, seperator).toInteger(),
-                        height: concatMetadataValues(mediaAttrs.height.attributes, item, seperator).toInteger()
+                    title: concatMetadataValues(mediaAttrs.title.attributes, rssItem, seperator),
+                    url: concatMetadataValues(mediaAttrs.url.attributes, rssItem, seperator),
+                    contentType: mediaContentTypeValue,
+                    width: mediaContentWidth,
+                    height: mediaContentHeight
                 )
             }
         }
@@ -56,12 +104,13 @@ class RssUtil {
          * MD5 Id generated with a Seed word that WONT change. Hence same MD5 on each request
          */
         new Post(
-                id: HashUtil.generateMD5("${rssPostIdBase}-${index}"),
-                title: title,
-                summary: summary,
-                date: new SimpleDateFormat(dateStringFormat).parse(dateString),
-                content: content,
-                media: media
+            id: HashUtil.generateMD5("${rssPostIdBase}-${index}"),
+            title: title,
+            summary: summary,
+            date: new SimpleDateFormat(dateStringFormat).parse(dateString),
+            content: content,
+            media: media,
+            extraFields: extraFields
         )
     }
 
@@ -79,7 +128,9 @@ class RssUtil {
 
     def objectBinder(doc, path) {
         def nodes = doc
-        path.split("\\.").each { nodes = nodes."${it}" }
+        path.split("\\.").each {
+            nodes = nodes."${it}"
+        }
         return nodes
     }
 }
