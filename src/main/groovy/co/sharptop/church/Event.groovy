@@ -12,6 +12,7 @@ class Event extends Entry {
     Date endDate
     Asset media
     SharingInfo sharingInfo
+    String location
 
     static String contentfulContentType = "event"
 

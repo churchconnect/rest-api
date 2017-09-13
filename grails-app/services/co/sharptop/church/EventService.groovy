@@ -39,7 +39,8 @@ class EventService {
                     "startDate"  : "DTSTART",
                     "description": "DESCRIPTION",
                     "createdAt"  : "DTSTAMP",
-                    "title"      : "SUMMARY"
+                    "title"      : "SUMMARY",
+                    "location"   : "RESOURCES"
             ]
 
             calendar.getComponents("VEVENT").each { component ->
@@ -66,6 +67,7 @@ class EventService {
                         title: calValues["title"],
                         description: calValues["description"],
                         startDate: calValues["startDate"],
+                        location: calValues["location"],
                         contactPersons: [],
                         createdAt: calValues["createdAt"],
                         updatedAt: calValues["createdAt"]
