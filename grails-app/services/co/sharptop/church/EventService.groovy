@@ -40,7 +40,7 @@ class EventService {
                     "description": "DESCRIPTION",
                     "createdAt"  : "DTSTAMP",
                     "title"      : "SUMMARY",
-                    "location"   : "LOCATION"
+                    "location"   : "RESOURCES"
             ]
 
             calendar.getComponents("VEVENT").each { component ->
@@ -65,6 +65,10 @@ class EventService {
                                 if(value < weekFromNow && value > today) {
                                     categories = "This Week"
                                 }
+                            }
+
+                            if(property.getName() == "RESOURCES" && value == "") {
+                                value = component.getProperty("LOCATION").getValue()
                             }
 
                             calValues[eventProp] = value
