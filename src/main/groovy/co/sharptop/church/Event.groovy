@@ -14,6 +14,7 @@ class Event extends Entry {
     String categories
     String location
     SharingInfo sharingInfo
+    String location
 
     static String contentfulContentType = "event"
 
