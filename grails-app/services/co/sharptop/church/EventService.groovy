@@ -39,21 +39,32 @@ class EventService {
                     "startDate"  : "DTSTART",
                     "description": "DESCRIPTION",
                     "createdAt"  : "DTSTAMP",
-                    "title"      : "SUMMARY"
+                    "title"      : "SUMMARY",
+                    "location"   : "LOCATION"
             ]
 
             calendar.getComponents("VEVENT").each { component ->
                 def calValues = [:]
                 def count = 0
+                def categories = ""
 
                 component.getProperties().each { property ->
                     propMap.each { eventProp, calProp ->
                         if (property.getName() == calProp) {
                             def value = property.getValue()
+                            def compareDateValue
                             def df = new SimpleDateFormat("yyyyMMdd'T'HHmmss")
+                            def today = new Date()
+                            def weekFromNow = new Date() + 7
 
                             if (property.getName() == "DTSTART" || property.getName() == "DTEND" || property.getName() == "DTSTAMP") {
                                 value = df.parse(value)
+                            }
+
+                            if(property.getName() == "DTSTART") {
+                                if(value < weekFromNow && value > today) {
+                                    categories = "This Week"
+                                }
                             }
 
                             calValues[eventProp] = value
@@ -68,7 +79,9 @@ class EventService {
                         startDate: calValues["startDate"],
                         contactPersons: [],
                         createdAt: calValues["createdAt"],
-                        updatedAt: calValues["createdAt"]
+                        updatedAt: calValues["createdAt"],
+                        categories: categories,
+                        location: calValues["location"]
                 )
 
                 count++
