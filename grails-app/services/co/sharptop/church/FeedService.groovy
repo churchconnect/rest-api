@@ -1,6 +1,7 @@
 package co.sharptop.church
 
 import grails.converters.JSON
+import org.springframework.beans.factory.annotation.Value
 
 import javax.transaction.Transactional
 
@@ -11,6 +12,15 @@ class FeedService {
 
     EventService eventService
 
+    //TODO: move these configs into a ConfigService (to replace Config.groovy -- we want config to come from environment, not database)
+    //TODO: include application configuration from ConfigService.groovy...
+    @Value('${church.prayerTimeImageAssetID}')
+    prayerTimeImageAssetID
+    @Value('${church.eventsImageAssetID}')
+    eventsImageAssetID
+    @Value('${church.liveStreamLinkId}')
+    liveStreamLinkId
+
     JSON feedJSON
 
     void refreshFeedCache() {
@@ -18,15 +28,16 @@ class FeedService {
     }
 
     Feed fetch() {
-
         new Feed(
             bannerImages: contentfulService.fetchBannerImages(),
             events: eventService.getAllEvents(),
             givingURL: "https://pushpay.com/p/thomasroadbaptistchurch",
-            liveStreamLink: contentfulService.fetchEntry(Link.class, Config.current.liveStreamLinkId),
+            liveStreamLink: contentfulService.fetchLink(liveStreamLinkId),
             postGroups: contentfulService.fetchPostGroups(),
             hasMinistryGroups: false, // contentfulService.fetchMinistryGroups(),
-            hasPrayerRequests: contentfulService.fetchEntries(PrayerRequest),
+            hasPrayerRequests: contentfulService.fetchPrayerRequests(),
+            prayerTimeImageURL: contentfulService.fetchAsset(prayerTimeImageAssetID)?.url,
+            eventsImageURL: contentfulService.fetchAsset(eventsImageAssetID)?.url,
             sermon: fetchCurrentSermon(),
             songs: fetchCurrentSongs()
         )

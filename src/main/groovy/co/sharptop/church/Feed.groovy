@@ -11,5 +11,7 @@ class Feed {
     List<Song> songs
     Boolean hasMinistryGroups
     Boolean hasPrayerRequests
+    String prayerTimeImageURL
+    String eventsImageURL
 
 }
