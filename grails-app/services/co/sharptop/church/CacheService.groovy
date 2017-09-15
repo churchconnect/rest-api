@@ -12,7 +12,7 @@ class CacheService {
     FeedService feedService
     RssPostService rssPostService
 
-    @Scheduled(fixedDelay=100000l, initialDelay = 10000l)
+    @Scheduled(fixedDelay=600000l, initialDelay = 30000l)
     void refreshCaches() {
         log.info "Refreshing caches"
         rssPostService.refreshFeeds()
