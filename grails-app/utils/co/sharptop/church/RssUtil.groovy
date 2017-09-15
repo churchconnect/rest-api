@@ -3,7 +3,9 @@ package co.sharptop.church
 import groovy.util.slurpersupport.GPathResult
 import org.grails.web.json.JSONObject
 import java.text.SimpleDateFormat
+import groovy.util.logging.Slf4j
 
+@Slf4j
 class RssUtil {
     String rssMetadata
     String rssPostIdBase
@@ -19,7 +21,12 @@ class RssUtil {
         def rootRss = getXmlResult(rssJsonData.url, rssJsonData.namespaces)
 
         rootRss.channel.item.withIndex().collect { item, index ->
-            createRssPost(rssJsonData.fields, item, index)
+            try {
+                createRssPost(rssJsonData.fields, item, index)
+            } catch(Exception e) {
+                log.error "Exception while creating Post for RSS Post Group ${rssPostIdBase}:"
+                log.error "Message: $e.message"
+            }
         }
     }
 
@@ -49,8 +56,6 @@ class RssUtil {
 
         // extraFields handling, maybe move into separate function later
         if(rssJsonData.extraFields) {
-
-//            println(rssItem.group.content[0].@url)
 
             // For each extraFields
             rssJsonData.extraFields.each { extraField ->

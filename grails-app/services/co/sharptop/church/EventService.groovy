@@ -46,15 +46,29 @@ class EventService {
             calendar.getComponents("VEVENT").each { component ->
                 def calValues = [:]
                 def count = 0
+                def categories = ""
 
                 component.getProperties().each { property ->
                     propMap.each { eventProp, calProp ->
                         if (property.getName() == calProp) {
                             def value = property.getValue()
+                            def compareDateValue
                             def df = new SimpleDateFormat("yyyyMMdd'T'HHmmss")
+                            def today = new Date()
+                            def weekFromNow = new Date() + 7
 
                             if (property.getName() == "DTSTART" || property.getName() == "DTEND" || property.getName() == "DTSTAMP") {
                                 value = df.parse(value)
+                            }
+
+                            if(property.getName() == "DTSTART") {
+                                if(value < weekFromNow && value > today) {
+                                    categories = "This Week"
+                                }
+                            }
+
+                            if(property.getName() == "RESOURCES" && value == "") {
+                                value = component.getProperty("LOCATION").getValue()
                             }
 
                             calValues[eventProp] = value
@@ -67,10 +81,11 @@ class EventService {
                         title: calValues["title"],
                         description: calValues["description"],
                         startDate: calValues["startDate"],
-                        location: calValues["location"],
                         contactPersons: [],
                         createdAt: calValues["createdAt"],
-                        updatedAt: calValues["createdAt"]
+                        updatedAt: calValues["createdAt"],
+                        categories: categories,
+                        location: calValues["location"]
                 )
 
                 count++
