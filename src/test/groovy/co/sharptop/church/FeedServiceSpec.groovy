@@ -24,6 +24,10 @@ class FeedServiceSpec extends Specification {
                 readApiKey: "ed0a251f9ea4bc1a3472bfa0ca89e51c3d7fa71dbd92813695fb8c5791f94fd7"
         )
 
+        service.prayerTimeImageAssetID = "4qgZD3p7VYqWsi0Es2uyqi"
+        service.eventsImageAssetID = "2cYan5B7X2yyu248mQUkCS"
+        service.liveStreamLinkId = "4DCKfXk6W4IakA42AyUyGy"
+
         mockEventService = Mock()
         service.eventService = mockEventService
 
