@@ -43,9 +43,8 @@ class EventService {
                     "location"   : "RESOURCES"
             ]
 
-            calendar.getComponents("VEVENT").each { component ->
+            calEvents = calendar.getComponents("VEVENT").withIndex().collect { component, index ->
                 def calValues = [:]
-                def count = 0
                 def categories = ""
 
                 component.getProperties().each { property ->
@@ -76,8 +75,8 @@ class EventService {
                     }
                 }
 
-                calEvents << new Event(
-                        id: HashUtil.generateMD5("event-${calValues["title"]}-${count}"),
+                return new Event(
+                        id: HashUtil.generateMD5("event-${calValues["title"]}-${index}"),
                         title: calValues["title"],
                         description: calValues["description"],
                         startDate: calValues["startDate"],
@@ -87,8 +86,6 @@ class EventService {
                         categories: categories,
                         location: calValues["location"]
                 )
-
-                count++
             }
         } catch(ex) {
             log.error "Error processing iCal feed ${eventsICalFileUrl}"
