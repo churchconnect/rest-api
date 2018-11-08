@@ -12,7 +12,7 @@ class EventService {
 
     ContentfulService contentfulService
 
-    @Value('${eventsICalFile}')
+    @Value('${eventsICalFile:}')
     String eventsICalFileUrl
 
     Event getEvent(id) {
@@ -24,7 +24,7 @@ class EventService {
     }
 
     List<Event> getAllEvents() {
-        ICalEvents + events
+        (eventsICalFileUrl != "") ? ICalEvents + events : events
     }
 
     List<Event> getICalEvents() {

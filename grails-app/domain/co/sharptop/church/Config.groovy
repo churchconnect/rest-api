@@ -4,7 +4,6 @@ class Config {
 
     String appName
     String appURL
-    String liveStreamLinkId
 
     static constraints = {
     }
@@ -19,9 +18,8 @@ class Config {
 
     static initializeData() {
         new Config(
-            appName: "TRBC Connect",
-            appURL: "http://localhost:9000",
-            liveStreamLinkId: "4DCKfXk6W4IakA42AyUyGy"
+            appName: "Church Connect",
+            appURL: "http://localhost:9000"
         ).save(failOnError: true)
     }
 
