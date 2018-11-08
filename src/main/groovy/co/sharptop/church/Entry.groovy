@@ -50,6 +50,7 @@ class Entry {
         PostGroup,
         PrayerRequest,
         Sermon,
+        Settings,
         SharingInfo,
         Song,
         SongList,

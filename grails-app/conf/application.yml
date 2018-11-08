@@ -31,15 +31,10 @@ environments:
                     # obtain the key here: https://www.contentful.com/developers/docs/references/authentication/#the-management-api
                     # we may need to store the church's username and password, rather than the token.
                     apiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-            appName: "Church Connect"
             appURL: "http://localhost:9000"
-            #liveStreamLinkId: ""
-            #prayerTimeImageAssetID: "" #Prayer Time Image
-            #eventsImageAssetID: "" #events-header
-            #givingLinkId: ""
+            settingsID: "" # Must be filled out
             cacheInitialDelay: "5000" #5000 == 5 seconds
             cacheInterval: "30000" #30000 == 30 seconds
-        #eventsICalFile: ""
 
 
     test:
@@ -59,15 +54,10 @@ environments:
                     # obtain the key here: https://www.contentful.com/developers/docs/references/authentication/#the-management-api
                     # we may need to store the church's username and password, rather than the token.
                     apiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-            appName: "Church Connect"
             appURL: "http://localhost:9000"
-            #liveStreamLinkId: ""
-            #prayerTimeImageAssetID: "" #Prayer Time Image
-            #eventsImageAssetID: "" #events-header
-            #givingLinkId: ""
+            settingsID: "" # Must be filled out
             cacheInitialDelay: "5000" #5000 == 5 seconds
             cacheInterval: "30000" #30000 == 30 seconds
-        #eventsICalFile: ""
 
 
     production:
