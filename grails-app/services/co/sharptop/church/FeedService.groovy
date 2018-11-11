@@ -12,14 +12,8 @@ class FeedService {
 
     EventService eventService
 
-    //TODO: move these configs into a ConfigService (to replace Config.groovy -- we want config to come from environment, not database)
-    //TODO: include application configuration from ConfigService.groovy...
-    @Value('${church.prayerTimeImageAssetID}')
-    prayerTimeImageAssetID
-    @Value('${church.eventsImageAssetID}')
-    eventsImageAssetID
-    @Value('${church.liveStreamLinkId}')
-    liveStreamLinkId
+    @Value('${church.settingsID:}')
+    String settingsID
 
     JSON feedJSON
 
@@ -28,16 +22,15 @@ class FeedService {
     }
 
     Feed fetch() {
+        Settings settings = contentfulService.fetchSettings(settingsID)
+
         new Feed(
+            settings: settings,
             bannerImages: contentfulService.fetchBannerImages(),
-            events: eventService.getAllEvents(),
-            givingURL: "https://pushpay.com/p/thomasroadbaptistchurch",
-            liveStreamLink: contentfulService.fetchLink(liveStreamLinkId),
+            events: eventService.getAllEvents(settings.eventICalLink),
             postGroups: contentfulService.fetchPostGroups(),
-            hasMinistryGroups: false, // contentfulService.fetchMinistryGroups(),
+            hasMinistryGroups: (!settings.ministryGroups) ?: contentfulService.fetchMinistryGroups(),
             hasPrayerRequests: contentfulService.fetchPrayerRequests(),
-            prayerTimeImageURL: contentfulService.fetchAsset(prayerTimeImageAssetID)?.url,
-            eventsImageURL: contentfulService.fetchAsset(eventsImageAssetID)?.url,
             sermon: fetchCurrentSermon(),
             songs: fetchCurrentSongs()
         )

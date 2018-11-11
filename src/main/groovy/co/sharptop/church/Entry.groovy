@@ -31,7 +31,7 @@ class Entry {
                 }
             }
         }
-        if (computedList != contentfulDomainClasses) {
+        if (!computedList.containsAll(contentfulDomainClasses)) {
             throw new Exception("Entry.contentfulDomainClasses is incorrect. It should look like: $computedList")
         }
     }
@@ -50,6 +50,7 @@ class Entry {
         PostGroup,
         PrayerRequest,
         Sermon,
+        Settings,
         SharingInfo,
         Song,
         SongList,

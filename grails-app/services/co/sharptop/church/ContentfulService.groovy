@@ -54,6 +54,10 @@ class ContentfulService {
         fetchEntry(Link, id)
     }
 
+    Settings fetchSettings(String id) {
+        fetchEntry(Settings, id)
+    }
+
     List<BannerImage> fetchBannerImages() {
         fetchEntries(BannerImage)
     }

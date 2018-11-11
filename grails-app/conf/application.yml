@@ -31,15 +31,10 @@ environments:
                     # obtain the key here: https://www.contentful.com/developers/docs/references/authentication/#the-management-api
                     # we may need to store the church's username and password, rather than the token.
                     apiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-            appName: "ChurchConnect"
             appURL: "http://localhost:9000"
-            liveStreamLinkId: "4DCKfXk6W4IakA42AyUyGy"
-            prayerTimeImageAssetID: "4qgZD3p7VYqWsi0Es2uyqi" #Prayer Time Image
-            eventsImageAssetID: "2cYan5B7X2yyu248mQUkCS" #events-header
+            settingsID: "" # Must be filled out
             cacheInitialDelay: "5000" #5000 == 5 seconds
             cacheInterval: "30000" #30000 == 30 seconds
-
-        eventsICalFile: https://api.serviceu.com/rest/events/occurrences?orgKey=9c6e78a4-5516-4203-9729-6ed0a665b2ae&format=ical
 
 
     test:
@@ -59,14 +54,10 @@ environments:
                     # obtain the key here: https://www.contentful.com/developers/docs/references/authentication/#the-management-api
                     # we may need to store the church's username and password, rather than the token.
                     apiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-            appName: "ChurchConnect"
             appURL: "http://localhost:9000"
-            liveStreamLinkId: "4DCKfXk6W4IakA42AyUyGy"
-            prayerTimeImageAssetID: "4qgZD3p7VYqWsi0Es2uyqi" #Prayer Time Image
-            eventsImageAssetID: "2cYan5B7X2yyu248mQUkCS" #events-header
+            settingsID: "" # Must be filled out
             cacheInitialDelay: "5000" #5000 == 5 seconds
             cacheInterval: "30000" #30000 == 30 seconds
-        eventsICalFile: https://api.serviceu.com/rest/events/occurrences?orgKey=9c6e78a4-5516-4203-9729-6ed0a665b2ae&format=ical
 
 
     production:

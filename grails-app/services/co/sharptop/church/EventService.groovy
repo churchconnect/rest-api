@@ -12,9 +12,6 @@ class EventService {
 
     ContentfulService contentfulService
 
-    @Value('${eventsICalFile}')
-    String eventsICalFileUrl
-
     Event getEvent(id) {
         allEvents.find { it.id == id }
     }
@@ -23,12 +20,12 @@ class EventService {
         contentfulService.fetchEvents()
     }
 
-    List<Event> getAllEvents() {
-        ICalEvents + events
+    List<Event> getAllEvents(Link eventICalLink) {
+        (eventICalLink != null) ? getICalEvents(eventICalLink) + events : events
     }
 
-    List<Event> getICalEvents() {
-        def url = new URL(eventsICalFileUrl)
+    List<Event> getICalEvents(Link eventICalLink) {
+        def url = new URL(eventICalLink.url)
         CalendarBuilder builder = new CalendarBuilder()
         def calEvents = []
 
