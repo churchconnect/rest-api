@@ -9,6 +9,7 @@ class Settings extends Entry {
     Asset prayerTimeBanner
     Asset eventBanner
     Boolean ministryGroups
+    String googleMapsApiKey
 
     static String contentfulContentType = "settings"
 }
