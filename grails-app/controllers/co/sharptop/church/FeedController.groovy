@@ -1,10 +1,3 @@
-/*
- * Copyright (c) 2016 by SharpTop Software, LLC
- * All rights reserved. No part of this software project may be used, reproduced, distributed, or transmitted in any
- * form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior
- * written permission of SharpTop Software, LLC. For permission requests, write to the author at info@sharptop.co.
- */
-
 package co.sharptop.church
 
 import grails.converters.JSON
@@ -16,7 +9,14 @@ class FeedController {
     FeedService feedService
 
     def index() {
-        render(feedService.fetch() as JSON)
+        if (!feedService.feedJSON) {
+            log.error "Feed has not been stored yet."
+            response.status = 404
+            render([message:"Feed has not been generated yet."] as JSON)
+            return
+        }
+
+        render feedService.feedJSON
     }
 
 }

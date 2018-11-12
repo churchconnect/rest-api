@@ -1,28 +1,36 @@
-/*
- * Copyright (c) 2016 by SharpTop Software, LLC
- * All rights reserved. No part of this software project may be used, reproduced, distributed, or transmitted in any
- * form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior
- * written permission of SharpTop Software, LLC. For permission requests, write to the author at info@sharptop.co.
- */
-
 package co.sharptop.church
 
-import grails.transaction.Transactional
+import grails.converters.JSON
+import org.springframework.beans.factory.annotation.Value
+
+import javax.transaction.Transactional
 
 @Transactional
 class FeedService {
 
     ContentfulService contentfulService
 
+    EventService eventService
+
+    @Value('${church.settingsID:}')
+    String settingsID
+
+    JSON feedJSON
+
+    void refreshFeedCache() {
+        feedJSON = fetch() as JSON
+    }
+
     Feed fetch() {
+        Settings settings = contentfulService.fetchSettings(settingsID)
+
         new Feed(
+            settings: settings,
             bannerImages: contentfulService.fetchBannerImages(),
-            events: contentfulService.fetchEvents(),
-            givingURL: "https://pushpay.com/p/thomasroadbaptistchurch",
-            liveStreamLink: contentfulService.fetchEntry(Link.class, Config.current.liveStreamLinkId),
+            events: eventService.getAllEvents(settings.eventICalLink),
             postGroups: contentfulService.fetchPostGroups(),
-            hasMinistryGroups: false, // contentfulService.fetchMinistryGroups(),
-            hasPrayerRequests: contentfulService.fetchEntries(PrayerRequest),
+            hasMinistryGroups: (!settings.ministryGroups) ? false : contentfulService.fetchMinistryGroups(),
+            hasPrayerRequests: contentfulService.fetchPrayerRequests(),
             sermon: fetchCurrentSermon(),
             songs: fetchCurrentSongs()
         )
@@ -39,5 +47,4 @@ class FeedService {
         List<SongList> songLists = contentfulService.fetchSongLists()
         songLists ? songLists.first()?.songs : null
     }
-
 }

@@ -15,6 +15,7 @@ dataSource:
 
 environments:
     development:
+        #Add these configurations to an application-development.yml file in the root of your project to override the configurations in development.
         grails.mail.disabled: true
         dataSource:
             dbCreate: update
@@ -30,6 +31,11 @@ environments:
                     # obtain the key here: https://www.contentful.com/developers/docs/references/authentication/#the-management-api
                     # we may need to store the church's username and password, rather than the token.
                     apiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            appURL: "http://localhost:9000"
+            settingsID: "" # Must be filled out
+            cacheInitialDelay: "5000" #5000 == 5 seconds
+            cacheInterval: "30000" #30000 == 30 seconds
+
 
     test:
         grails.mail.disabled: true
@@ -48,6 +54,11 @@ environments:
                     # obtain the key here: https://www.contentful.com/developers/docs/references/authentication/#the-management-api
                     # we may need to store the church's username and password, rather than the token.
                     apiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            appURL: "http://localhost:9000"
+            settingsID: "" # Must be filled out
+            cacheInitialDelay: "5000" #5000 == 5 seconds
+            cacheInterval: "30000" #30000 == 30 seconds
+
 
     production:
         grails.mail.disabled: false
@@ -72,6 +83,9 @@ environments:
                 testOnReturn: false
                 jdbcInterceptors: ConnectionState
                 defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+        church:
+            cacheInitialDelay: "30000" #30000 == 30 seconds
+            cacheInterval: "600000" #600000 == 10 minutes
 
 ---
 ---

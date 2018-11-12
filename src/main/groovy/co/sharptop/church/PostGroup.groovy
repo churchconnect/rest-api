@@ -1,21 +1,18 @@
-/*
- * Copyright (c) 2016 by SharpTop Software, LLC
- * All rights reserved. No part of this software project may be used, reproduced, distributed, or transmitted in any
- * form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior
- * written permission of SharpTop Software, LLC. For permission requests, write to the author at info@sharptop.co.
- */
-
 package co.sharptop.church
 
-import java.text.SimpleDateFormat
+import grails.util.Holders
 
 class PostGroup extends Entry {
 
     String title
     Asset media
     List<Post> posts
-    String rssUrl
     List<Post> publishedPosts
+    String rssMetadata
+    List<PostGroup> postGroups
+    String postGroupsSummary
+    String postGroupsContent
+    boolean showOnHomeFeed
 
     static String contentfulContentType = "post-group"
 
@@ -29,31 +26,8 @@ class PostGroup extends Entry {
         }
     }
 
-    List<Post> getRssPosts() {
-        (rssUrl) ? createRssPosts(rssUrl) : []
-    }
-
-    List<Post> createRssPosts(String rssUrl) {
-        def rootRss = new XmlSlurper().parse(rssUrl)
-
-        rootRss.channel.item.withIndex().collect { item, index ->
-            /**
-             * MD5 Id generated with a Seed word that WONT change. Hence same MD5 on each request
-             */
-            new Post(
-                    id: HashUtil.generateMD5("rssPost-" + id + "-" + index),
-                    title: item.title,
-                    summary: "<img src='${item.content.thumbnail.@url}' />",
-                    date: new SimpleDateFormat("EEE, dd MMM yyyy kk:mm:ss Z").parse(item.pubDate.toString()),
-                    content: item.description,
-                    media: new Asset(
-                            title: item.content.title,
-                            url: item.content.thumbnail.@url,
-                            contentType: "image/webp",
-                            width: item.content.thumbnail.@width.toInteger(),
-                            height: item.content.thumbnail.@height.toInteger()
-                    )
-            )
-        }
+    private List<Post> getRssPosts() {
+        RssPostService rssPostService = Holders.grailsApplication.mainContext.getBean('rssPostService')
+        rssPostService.fetch(this)
     }
 }

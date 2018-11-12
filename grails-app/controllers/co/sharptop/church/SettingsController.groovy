@@ -3,10 +3,10 @@ package co.sharptop.church
 import grails.plugin.springsecurity.annotation.Secured
 
 @Secured("permitAll")
-class BannerImageController extends EntryController {
+class SettingsController extends EntryController{
 
-    BannerImageController() {
-        super(BannerImage)
+    SettingsController() {
+        super(Settings)
     }
 
 }

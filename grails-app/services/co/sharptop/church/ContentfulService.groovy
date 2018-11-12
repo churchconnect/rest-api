@@ -1,10 +1,3 @@
-/*
- * Copyright (c) 2016 by SharpTop Software, LLC
- * All rights reserved. No part of this software project may be used, reproduced, distributed, or transmitted in any
- * form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior
- * written permission of SharpTop Software, LLC. For permission requests, write to the author at info@sharptop.co.
- */
-
 package co.sharptop.church
 
 import grails.plugins.rest.client.RestBuilder
@@ -44,6 +37,27 @@ class ContentfulService {
         fetchEntries(clazz).find { it.id == id }
     }
 
+    Asset fetchAsset(String id) {
+        RestResponse response = rest.get("$readApiURL/assets/$id") {
+            header "Authorization", "Bearer $readApiKey"
+        }
+
+        return new Asset(Asset.preprocessJSON(response.json.fields) + [
+                id: response.json.sys.id,
+                createdAt: ContentfulUtil.parseSystemDate(response.json.sys.createdAt),
+                updatedAt: ContentfulUtil.parseSystemDate(response.json.sys.updatedAt),
+                version: response.json.sys.revision
+        ])
+    }
+
+    Link fetchLink(String id) {
+        fetchEntry(Link, id)
+    }
+
+    Settings fetchSettings(String id) {
+        fetchEntry(Settings, id)
+    }
+
     List<BannerImage> fetchBannerImages() {
         fetchEntries(BannerImage)
     }
@@ -58,6 +72,10 @@ class ContentfulService {
 
     List<PostGroup> fetchPostGroups() {
         fetchEntries(PostGroup)
+    }
+
+    List<PrayerRequest> fetchPrayerRequests() {
+        fetchEntries(PrayerRequest)
     }
 
     List<Sermon> fetchSermons() {

@@ -1,16 +1,10 @@
-/*
- * Copyright (c) 2016 by SharpTop Software, LLC
- * All rights reserved. No part of this software project may be used, reproduced, distributed, or transmitted in any
- * form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior
- * written permission of SharpTop Software, LLC. For permission requests, write to the author at info@sharptop.co.
- */
-
 package co.sharptop.church
 
 import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin
+import org.springframework.beans.factory.annotation.Value
 import spock.lang.Specification
 
 /**
@@ -21,10 +15,31 @@ import spock.lang.Specification
 @TestMixin(GrailsUnitTestMixin)
 class FeedServiceSpec extends Specification {
 
+    EventService mockEventService
+    Settings settings
+
     def setup() {
         Entry.initializeData()
         Config.initializeData()
-        service.contentfulService = new ContentfulService(readApiURL: "https://cdn.contentful.com/spaces/og0cae44jgie", readApiKey: "7a90026a74e435c32abf99cd6f7f7676449de92fc0c44051bf86fd326e7fe60d")
+        service.contentfulService = new ContentfulService(
+                readApiURL: "http://www.google.com",
+                readApiKey: "fasdfjlkshfuwefalkjsfskadjf"
+        )
+        settings = new Settings(
+                appName: "TestApp",
+                liveStreamLink: null,
+                givingLink: null,
+                eventICalLink: Mock(Link),
+                prayerTimeBanner: null,
+                eventBanner: null,
+                ministryGroups: false
+        )
+        service.contentfulService.metaClass.fetchSettings = { id -> return settings }
+        service.contentfulService.metaClass.fetchPrayerRequests = { -> return [ Mock(PrayerRequest) ] }
+
+        mockEventService = Mock()
+        service.eventService = mockEventService
+
     }
 
     def cleanup() {
@@ -36,12 +51,17 @@ class FeedServiceSpec extends Specification {
 
         then:
         result
-        result.bannerImages
+        result.settings
+        result.bannerImages == []
         result.events
-        result.postGroups
+        result.postGroups == []
         !result.hasMinistryGroups
         result.hasPrayerRequests
-        result.sermon
-        result.songs
+        !result.sermon
+        !result.songs
+
+        and:
+        1 * mockEventService.getAllEvents(settings.eventICalLink) >> [ new Event() ]
+        0 * _
     }
 }
