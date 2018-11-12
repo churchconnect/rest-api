@@ -29,7 +29,7 @@ class FeedService {
             bannerImages: contentfulService.fetchBannerImages(),
             events: eventService.getAllEvents(settings.eventICalLink),
             postGroups: contentfulService.fetchPostGroups(),
-            hasMinistryGroups: (!settings.ministryGroups) ?: contentfulService.fetchMinistryGroups(),
+            hasMinistryGroups: (!settings.ministryGroups) ? false : contentfulService.fetchMinistryGroups(),
             hasPrayerRequests: contentfulService.fetchPrayerRequests(),
             sermon: fetchCurrentSermon(),
             songs: fetchCurrentSongs()

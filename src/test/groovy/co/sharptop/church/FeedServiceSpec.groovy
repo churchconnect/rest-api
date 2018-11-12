@@ -4,6 +4,7 @@ import grails.test.mixin.Mock
 import grails.test.mixin.TestFor
 import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin
+import org.springframework.beans.factory.annotation.Value
 import spock.lang.Specification
 
 /**
@@ -15,18 +16,26 @@ import spock.lang.Specification
 class FeedServiceSpec extends Specification {
 
     EventService mockEventService
+    Settings settings
 
     def setup() {
         Entry.initializeData()
         Config.initializeData()
         service.contentfulService = new ContentfulService(
-                readApiURL: "https://cdn.contentful.com/spaces/akvvi5g4kspm",
-                readApiKey: "ed0a251f9ea4bc1a3472bfa0ca89e51c3d7fa71dbd92813695fb8c5791f94fd7"
+                readApiURL: "http://www.google.com",
+                readApiKey: "fasdfjlkshfuwefalkjsfskadjf"
         )
-
-        service.prayerTimeImageAssetID = "4qgZD3p7VYqWsi0Es2uyqi"
-        service.eventsImageAssetID = "2cYan5B7X2yyu248mQUkCS"
-        service.liveStreamLinkId = "4DCKfXk6W4IakA42AyUyGy"
+        settings = new Settings(
+                appName: "TestApp",
+                liveStreamLink: null,
+                givingLink: null,
+                eventICalLink: Mock(Link),
+                prayerTimeBanner: null,
+                eventBanner: null,
+                ministryGroups: false
+        )
+        service.contentfulService.metaClass.fetchSettings = { id -> return settings }
+        service.contentfulService.metaClass.fetchPrayerRequests = { -> return [ Mock(PrayerRequest) ] }
 
         mockEventService = Mock()
         service.eventService = mockEventService
@@ -42,16 +51,17 @@ class FeedServiceSpec extends Specification {
 
         then:
         result
-        result.bannerImages
+        result.settings
+        result.bannerImages == []
         result.events
-        result.postGroups
+        result.postGroups == []
         !result.hasMinistryGroups
         result.hasPrayerRequests
         !result.sermon
-        result.songs
+        !result.songs
 
         and:
-        1 * mockEventService.getAllEvents() >> [ new Event() ]
+        1 * mockEventService.getAllEvents(settings.eventICalLink) >> [ new Event() ]
         0 * _
     }
 }
